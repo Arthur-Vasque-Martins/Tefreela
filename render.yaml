@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: tefreela-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DB_PATH
+        value: ./data/tefreela.db
+      - key: PLATFORM_FEE
+        value: "10"
+
+  - type: web
+    name: tefreela-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npx expo export --platform web
+    staticPublishPath: dist
+    envVars:
+      - key: EXPO_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: tefreela-api
+          envVarKey: RENDER_EXTERNAL_URL
