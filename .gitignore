@@ -2,6 +2,6 @@
 *.db
 *.sqlite
 *.sqlite3
-**/data/
-node_modules/
-.expo/
+**/node_modules/
+**/.expo/
+**/dist/

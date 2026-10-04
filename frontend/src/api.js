@@ -4,8 +4,9 @@ import { Platform } from 'react-native';
 //  - Emulador Android: http://10.0.2.2:3333
 //  - Simulador iOS / web: http://localhost:3333
 //  - Celular físico (Expo Go): http://IP-DO-SEU-COMPUTADOR:3333  (mesma rede Wi-Fi)
+const localBaseUrl = Platform.OS === 'android' ? 'http://10.0.2.2:3333' : 'http://localhost:3333';
 export const config = {
-  baseUrl: Platform.OS === 'android' ? 'http://10.0.2.2:3333' : 'http://localhost:3333',
+  baseUrl: process.env.EXPO_PUBLIC_API_URL || localBaseUrl,
 };
 
 let token = null;
