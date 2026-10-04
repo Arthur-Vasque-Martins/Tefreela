@@ -1,0 +1,14 @@
+{
+  "name": "tefreela-backend",
+  "version": "1.0.0",
+  "description": "API do Tefreela (marketplace de freelancers) - Node.js + SQLite, sem dependências externas",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": { "node": ">=22.5.0" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node src/seed.js --reset",
+    "test": "node --test"
+  }
+}
