@@ -41,6 +41,8 @@ export const api = {
   me: () => request('GET', '/me'),
   categories: () => request('GET', '/categories'),
   services: (params = {}) => request('GET', `/services${qs(params)}`),
+  myServices: () => request('GET', '/services/mine'),
+  createService: (data) => request('POST', '/services', data),
   hire: (serviceId, description) => request('POST', '/hirings', { serviceId, description }),
   hirings: () => request('GET', '/hirings'),
   updateStatus: (id, status) => request('PATCH', `/hirings/${id}/status`, { status }),

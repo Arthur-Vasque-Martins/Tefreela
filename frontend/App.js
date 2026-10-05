@@ -14,11 +14,12 @@ import ChatScreen from './src/screens/ChatScreen';
 import CreditsScreen from './src/screens/CreditsScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import ServiceFormScreen from './src/screens/ServiceFormScreen';
 
 const screens = {
   Home: HomeScreen, Search: SearchScreen, ServiceDetail: ServiceDetailScreen, Hire: HireScreen,
   Hirings: HiringsScreen, HiringDetail: HiringDetailScreen, Chat: ChatScreen,
-  Credits: CreditsScreen, Dashboard: DashboardScreen, Profile: ProfileScreen,
+  Credits: CreditsScreen, Dashboard: DashboardScreen, Profile: ProfileScreen, ServiceForm: ServiceFormScreen,
 };
 
 export default function App() {

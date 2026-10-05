@@ -31,6 +31,7 @@ export default function DashboardScreen({ nav }) {
       {!!error && <ErrorBox message={error} onRetry={reload} />}
       {data && <>
         <Text style={{ fontSize: 22, fontWeight: '800', marginBottom: 12 }}>Olá, {data.stats.name.split(' ')[0]} 👋</Text>
+        <Button title="＋ Adicionar meu serviço" onPress={() => nav.go('ServiceForm', { onSaved: reload })} style={{ marginBottom: 14 }} />
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
           <Card label="Saldo" value={`${data.stats.balance} créditos`} /><Card label="Solicitações pendentes" value={data.stats.pending} />
           <Card label="Serviços ativos" value={data.stats.active} /><Card label="Serviços concluídos" value={data.stats.completed} />
