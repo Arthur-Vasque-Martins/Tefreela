@@ -15,11 +15,12 @@ import CreditsScreen from './src/screens/CreditsScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import ServiceFormScreen from './src/screens/ServiceFormScreen';
+import DeveloperDashboardScreen from './src/screens/DeveloperDashboardScreen';
 
 const screens = {
   Home: HomeScreen, Search: SearchScreen, ServiceDetail: ServiceDetailScreen, Hire: HireScreen,
   Hirings: HiringsScreen, HiringDetail: HiringDetailScreen, Chat: ChatScreen,
-  Credits: CreditsScreen, Dashboard: DashboardScreen, Profile: ProfileScreen, ServiceForm: ServiceFormScreen,
+  Credits: CreditsScreen, Dashboard: DashboardScreen, Profile: ProfileScreen, ServiceForm: ServiceFormScreen, DeveloperDashboard: DeveloperDashboardScreen,
 };
 
 export default function App() {
@@ -31,7 +32,7 @@ export default function App() {
     back: () => setStack(s => s.slice(0, -1)),
   };
   const login = ({ token, user: u }) => {
-    setToken(token); setUser(u); setStack([]); setTab(u.role === 'cliente' ? 'Home' : 'Dashboard');
+    setToken(token); setUser(u); setStack([]); setTab(u.role === 'developer' ? 'DeveloperDashboard' : u.role === 'cliente' ? 'Home' : 'Dashboard');
   };
   const logout = () => { setToken(null); setUser(null); setStack([]); };
 

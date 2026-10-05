@@ -40,6 +40,6 @@ export const hiringOut = (r) => ({
 });
 
 export const userOut = (u) => ({
-  id: u.id, name: u.name, email: u.email, role: u.role,
+  id: u.id, name: u.name, email: u.email, role: u.is_developer ? 'developer' : u.role,
   headline: u.headline, city: u.city, credits: u.credits,
 });

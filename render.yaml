@@ -14,6 +14,10 @@ services:
         value: ./data/tefreela.db
       - key: PLATFORM_FEE
         value: "10"
+      - key: DEVELOPER_EMAIL
+        value: dev@tefreela.com
+      - key: DEVELOPER_PASSWORD
+        sync: false
 
   - type: web
     name: tefreela-web

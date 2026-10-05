@@ -18,6 +18,8 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET || 'dev-secret-change-me',
   dbPath: process.env.DB_PATH || path.join(root, 'data', 'tefreela.db'),
   platformFee: Number(process.env.PLATFORM_FEE ?? 10),
+  developerEmail: (process.env.DEVELOPER_EMAIL || 'dev@tefreela.com').trim().toLowerCase(),
+  developerPassword: process.env.DEVELOPER_PASSWORD || '',
   initialCredits: 350,
   tokenTtlSeconds: 60 * 60 * 24 * 7,
 };

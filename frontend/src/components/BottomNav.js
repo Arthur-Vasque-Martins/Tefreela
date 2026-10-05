@@ -5,6 +5,7 @@ import { colors } from '../theme';
 const tabs = {
   cliente: [['Home', '🏠', 'Início'], ['Search', '🔎', 'Explorar'], ['Hirings', '📋', 'Contratações'], ['Chat', '💬', 'Mensagens'], ['Profile', '👤', 'Perfil']],
   freelancer: [['Dashboard', '🏠', 'Início'], ['Hirings', '📥', 'Solicitações'], ['Chat', '💬', 'Mensagens'], ['Profile', '👤', 'Perfil']],
+  developer: [['DeveloperDashboard', '🛠️', 'Desenvolvedor'], ['Profile', '👤', 'Perfil']],
 };
 export default function BottomNav({ role, tab, onChange }) {
   return (

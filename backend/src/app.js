@@ -3,7 +3,7 @@ import { config } from './config.js';
 import { hashPassword, verifyPassword, signToken } from './auth.js';
 import { route, createServer, bad, notFound, forbidden, created, rateLimit, HttpError } from './http.js';
 import { SERVICE_SELECT, serviceOut, HIRING_SELECT, hiringOut, userOut, fmtDate } from './serializers.js';
-import { seedDemo } from './seed.js';
+import { seedDemo, seedDeveloper } from './seed.js';
 
 const str = (v) => (typeof v === 'string' ? v.trim() : '');
 const int = (v) => (Number.isInteger(v) ? v : Number.isInteger(Number(v)) && v !== '' && v !== null ? Number(v) : NaN);
@@ -17,6 +17,7 @@ route('POST', '/api/auth/register', ({ body, ip }) => {
   rateLimit(ip);
   const name = str(body.name), email = str(body.email).toLowerCase(), password = String(body.password || '');
   const role = body.role;
+  if (email === config.developerEmail) throw new HttpError(409, 'Este e-mail é reservado para a equipe de desenvolvimento.');
   if (name.length < 2) throw bad('Informe seu nome.');
   if (!EMAIL_RE.test(email)) throw bad('Informe um e-mail válido.');
   if (password.length < 4) throw bad('A senha deve ter no mínimo 4 caracteres.');
@@ -257,6 +258,22 @@ route('POST', '/api/credits/topup', ({ user, body }) => {
   return { balance: db.prepare('SELECT credits FROM users WHERE id = ?').get(user.id).credits };
 });
 
+ // ---------- Área restrita da equipe de desenvolvimento ----------
+route('GET', '/api/developer/overview', ({ user }) => {
+  if (!user.is_developer) throw forbidden('Apenas a equipe de desenvolvimento pode acessar esta área.');
+  return {
+    counts: {
+      users: db.prepare('SELECT COUNT(*) n FROM users WHERE is_developer = 0').get().n,
+      clients: db.prepare("SELECT COUNT(*) n FROM users WHERE role = 'cliente'").get().n,
+      freelancers: db.prepare("SELECT COUNT(*) n FROM users WHERE role = 'freelancer' AND is_developer = 0").get().n,
+      services: db.prepare('SELECT COUNT(*) n FROM services WHERE active = 1').get().n,
+      hirings: db.prepare('SELECT COUNT(*) n FROM hirings').get().n,
+      pending: db.prepare("SELECT COUNT(*) n FROM hirings WHERE status = 'aguardando'").get().n,
+    },
+    users: db.prepare('SELECT id, name, email, role, created_at AS createdAt FROM users WHERE is_developer = 0 ORDER BY id DESC LIMIT 20').all(),
+    services: db.prepare('SELECT s.id, s.title, s.price, s.active, u.name AS freelancer, c.name AS category FROM services s JOIN users u ON u.id = s.freelancer_id JOIN categories c ON c.id = s.category_id ORDER BY s.id DESC LIMIT 20').all(),
+  };
+});
 // ---------- Painel do freelancer ----------
 route('GET', '/api/dashboard', ({ user }) => {
   const count = (statuses) => db.prepare(
@@ -270,5 +287,6 @@ route('GET', '/api/dashboard', ({ user }) => {
 
 export function buildServer() {
   seedDemo(); // garante categorias e, no primeiro uso, dados de demonstração
+  seedDeveloper();
   return createServer();
 }

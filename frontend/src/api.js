@@ -53,4 +53,5 @@ export const api = {
   credits: () => request('GET', '/credits'),
   topup: (amount) => request('POST', '/credits/topup', { amount }),
   dashboard: () => request('GET', '/dashboard'),
+  developerOverview: () => request('GET', '/developer/overview'),
 };

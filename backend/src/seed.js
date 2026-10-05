@@ -1,5 +1,6 @@
 import { db, now, tx } from './db.js';
 import { hashPassword } from './auth.js';
+import { config } from './config.js';
 
 const categories = [
   ['tec', '💻', 'Tecnologia'], ['des', '🎨', 'Design'], ['man', '🔧', 'Manutenção'], ['edu', '📚', 'Educação'],
@@ -47,6 +48,29 @@ export function seedDemo() {
   return true;
 }
 
+ // Cria/atualiza a conta administrativa somente com senha fornecida no ambiente.
+export function seedDeveloper() {
+  const email = config.developerEmail;
+  const password = config.developerPassword;
+  if (!password) return false;
+  if (password.length < 12) {
+    console.error('DEVELOPER_PASSWORD deve ter pelo menos 12 caracteres; conta dev não foi criada.');
+    return false;
+  }
+  const existing = db.prepare('SELECT id, is_developer FROM users WHERE email = ?').get(email);
+  if (existing && !existing.is_developer) {
+    console.error('O e-mail configurado para desenvolvedor já pertence a uma conta comum. Escolha outro DEVELOPER_EMAIL.');
+    return false;
+  }
+  if (existing) {
+    db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(hashPassword(password), existing.id);
+    return true;
+  }
+  const id = db.prepare(
+    'INSERT INTO users (name,email,password_hash,role,is_developer,headline,city,credits,created_at) VALUES (?,?,?,?,?,?,?,?,?)'
+  ).run('Equipe Tefreela', email, hashPassword(password), 'freelancer', 1, 'Desenvolvimento', null, 0, now()).lastInsertRowid;
+  return Boolean(id);
+}
 // Uso: node src/seed.js [--reset]
 if (process.argv[1] && process.argv[1].endsWith('seed.js')) {
   if (process.argv.includes('--reset')) {

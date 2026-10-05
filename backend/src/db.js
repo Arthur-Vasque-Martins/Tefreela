@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT NOT NULL UNIQUE COLLATE NOCASE,
   password_hash TEXT NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('cliente','freelancer')),
+  is_developer INTEGER NOT NULL DEFAULT 0 CHECK (is_developer IN (0,1)),
   headline TEXT,
   city TEXT,
   credits INTEGER NOT NULL DEFAULT 0 CHECK (credits >= 0),
@@ -82,6 +83,12 @@ CREATE INDEX IF NOT EXISTS idx_hirings_freelancer ON hirings(freelancer_id);
 CREATE INDEX IF NOT EXISTS idx_messages_hiring ON messages(hiring_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_user ON transactions(user_id);
 `);
+
+// Migra bancos criados antes da área restrita de desenvolvimento.
+const userColumns = db.prepare('PRAGMA table_info(users)').all();
+if (!userColumns.some((column) => column.name === 'is_developer')) {
+  db.exec('ALTER TABLE users ADD COLUMN is_developer INTEGER NOT NULL DEFAULT 0 CHECK (is_developer IN (0,1))');
+}
 
 export const now = () => new Date().toISOString();
 
